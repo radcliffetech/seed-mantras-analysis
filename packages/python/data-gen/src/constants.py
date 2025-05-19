@@ -34,68 +34,14 @@ SINGLE_CONSONANTS = [
     "h",
 ]
 
-CONSONANT_CLUSTERS = [
-    "k",
-    "kh",
-    "g",
-    "gh",
-    "ṅ",
-    "c",
-    "ch",
-    "j",
-    "jh",
-    "ñ",
-    "ṭ",
-    "ṭh",
-    "ḍ",
-    "ḍh",
-    "ṇ",
-    "t",
-    "th",
-    "d",
-    "dh",
-    "n",
-    "p",
-    "ph",
-    "b",
-    "bh",
-    "m",
-    "y",
-    "r",
-    "l",
-    "v",
-    "ś",
-    "ṣ",
-    "s",
-    "h",
-    "hr",
-    "kr",
-    "kl",
-    "gr",
-    "gl",
-    "tr",
-    "dr",
-    "pr",
-    "br",
-    "mr",
-    "vr",
-    "śr",
-    "kṣ",
-    "jñ",
-    "sm",
-    "sn",
-    "st",
-    "sp",
-    "sk",
-    "phr",
-    "thr",
-    "dhṛ",
-    "ghr",
-    "pl",
-    "bl",
+from itertools import product
+
+CONSONANT_CLUSTERS = list(SINGLE_CONSONANTS) + [
+    c1 + c2 for c1, c2 in product(SINGLE_CONSONANTS, repeat=2) if c1 != c2
 ]
-VOWELS = ["a", "ā", "i", "ī", "u", "ū", "ṛ", "ṝ", "ḷ", "e", "ai", "o", "au"]
-FINALS = ["", "ṃ", "ḥ", "t", "ṭ", "ṁ"]  # certainly not exhaustive
+
+VOWELS = ["a", "ā", "i", "ī", "u", "ū", "ṛ", "ṝ", "ḷ", "ḹ", "e", "ai", "o", "au"]
+FINALS = ["ṁ", "ḥ", "m", "ṭ", "t", ""]  # traditional finals
 
 
 CONSONANT_METADATA = {

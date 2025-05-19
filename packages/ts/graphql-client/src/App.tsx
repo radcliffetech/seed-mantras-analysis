@@ -1,31 +1,93 @@
 import { gql, useQuery } from "@apollo/client";
 
-const GET_CONSONANTS = gql`
-  query GetConsonants {
-    consonants {
-      phoneme
-      place
-      manner
+import { BijaMandala } from "./components/BijaMandala";
+import { useState } from "react";
+
+const getQuery = (query: string) => {
+  return gql`
+  query {
+    bijaLayers(vowel: "${query}") {
+      id
+      name
+      bijas {
+        id
+        iast
+        traditional
+        initialcluster
+        place
+        manner
+        voicing
+        retroflex
+        vowel
+        final
+      }
+      links {
+        sourceId
+        targetId
+      }
     }
   }
 `;
+};
 
 function App() {
-  const { loading, error, data } = useQuery(GET_CONSONANTS);
+  const [vowel, setVowel] = useState<string>("ai");
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  const {
+    data: bijaData,
+    loading: bLoading,
+    error: bError,
+  } = useQuery(getQuery(vowel));
+  const vowelOrder = [
+    "all",
+    "a",
+    "ā",
+    "i",
+    "ī",
+    "u",
+    "ū",
+    "ṛ",
+    "ṝ",
+    "ḷ",
+    "ḹ",
+    "e",
+    "ai",
+    "o",
+    "au",
+  ];
+
+  if (bLoading) return <p>Loading...</p>;
+  if (bError) return <p>Error: {bError?.message}</p>;
 
   return (
     <div>
-      <h1>Consonants</h1>
-      <ul>
-        {data.consonants.map((c: any) => (
-          <li key={c.phoneme}>
-            {c.phoneme} ({c.place}, {c.manner})
-          </li>
+      <h2>Bīja Mandala</h2>
+      <div
+        style={{
+          marginBottom: "1rem",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "0.5rem",
+        }}
+      >
+        {vowelOrder.map((v) => (
+          <button
+            key={v}
+            onClick={() => setVowel(v)}
+            style={{
+              padding: "4px 10px",
+              borderRadius: "20px",
+              border: vowel === v ? "2px solid #444" : "1px solid #ccc",
+              background: vowel === v ? "#eee" : "#fff",
+              fontWeight: vowel === v ? "bold" : "normal",
+              cursor: "pointer",
+            }}
+          >
+            {v}
+          </button>
         ))}
-      </ul>
+      </div>
+      <BijaMandala data={bijaData.bijaLayers} />
     </div>
   );
 }
