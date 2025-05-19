@@ -1,0 +1,5 @@
+black
+fastapi
+pre-commit
+strawberry-graphql[fastapi]
+uvicorn

@@ -1,0 +1,38 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test-python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/python/data-gen
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - run: python -m pip install --upgrade pip
+      - run: pip install -r requirements.txt
+      - run: black --check src
+      - run: pytest
+
+  test-client:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/ts/graphql-client
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - run: pnpm install
+      - run: pnpm run format:check
+      # optional:
+      # - run: pnpm run build

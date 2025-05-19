@@ -1,0 +1,19 @@
+{
+  "name": "seed-mantras-analysis",
+  "scripts": {
+    "dev:client": "pnpm --filter graphql-client dev",
+    "dev:server": "source .venv-graphql-server/bin/activate && cd packages/python/graphql-server && uvicorn src.main:app --reload",
+    "dev:data": "source .venv-analysis/bin/activate && cd packages/python/data-gen &&  python src/generate.py",
+    "dev": "concurrently \"pnpm dev:server\" \"pnpm dev:client\"",
+    "format": "pnpm --filter graphql-client run format && cd packages/python/data-gen && black src && cd ../graphql-server && black src",
+    "format:check": "pnpm --filter graphql-client run format:check && cd packages/python/data-gen && black --check src && cd ../graphql-server && black --check src",
+    "precommit": "pre-commit run --all-files"
+  },
+  "private": true,
+  "workspaces": [
+    "packages/ts/*"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

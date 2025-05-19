@@ -1,0 +1,7 @@
+venv/
+
+__pycache__/
+
+# sandbox directory for output
+sandbox/ 
+tmp/
