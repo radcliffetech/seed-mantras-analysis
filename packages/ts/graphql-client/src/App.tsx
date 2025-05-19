@@ -3,10 +3,11 @@ import { gql, useQuery } from "@apollo/client";
 import { BijaMandala } from "./components/BijaMandala";
 import { useState } from "react";
 
-const getQuery = (query: string) => {
-  return gql`
+function App() {
+  const [vowel, setVowel] = useState<string>("ai");
+  const getQuery = () => gql`
   query {
-    bijaLayers(vowel: "${query}") {
+    bijaLayers(vowel: "${vowel}") {
       id
       name
       bijas {
@@ -28,16 +29,12 @@ const getQuery = (query: string) => {
     }
   }
 `;
-};
-
-function App() {
-  const [vowel, setVowel] = useState<string>("ai");
 
   const {
     data: bijaData,
     loading: bLoading,
     error: bError,
-  } = useQuery(getQuery(vowel));
+  } = useQuery(getQuery());
   const vowelOrder = [
     "all",
     "a",

@@ -48,14 +48,6 @@ OUTPUT_BIJAS = (
 )
 
 
-def first_consonant_of_cluster(cluster):
-    # Match longest possible consonant at the start (for "kh", etc.)
-    for cons in sorted(consonants, key=lambda x: -len(x)):
-        if cluster.startswith(cons):
-            return cons
-    return cluster[0]  # Fallback
-
-
 @strawberry.type
 class Phoneme:
     phoneme: str
@@ -208,11 +200,7 @@ class Query:
             "ṣ",
             "s",
         ]
-        clusters = [
-            c1 + c2
-            for c1, c2 in product(consonants, repeat=2)
-            # if c1 != c2
-        ]
+        clusters = [c1 + c2 for c1, c2 in product(consonants, repeat=2)]
 
         def include(v):
             # if vowels is "all", include all

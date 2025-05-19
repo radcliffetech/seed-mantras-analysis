@@ -16,6 +16,9 @@ importers:
       "@apollo/client":
         specifier: ^3.13.8
         version: 3.13.8(@types/react@19.1.4)(graphql@16.11.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      d3:
+        specifier: ^7.9.0
+        version: 7.9.0
       graphql:
         specifier: ^16.11.0
         version: 16.11.0
@@ -41,9 +44,6 @@ importers:
       "@vitejs/plugin-react":
         specifier: ^4.4.1
         version: 4.4.1(vite@6.3.5)
-      d3:
-        specifier: ^7.9.0
-        version: 7.9.0
       eslint:
         specifier: ^9.25.0
         version: 9.27.0
