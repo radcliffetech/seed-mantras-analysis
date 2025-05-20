@@ -13,7 +13,7 @@ export const SearchForm = ({
     <div className="flex gap-2 items-center mb-4">
       <input
         type="text"
-        placeholder="Search..."
+        placeholder={t("system.searchPlaceholder")}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="border px-3 py-2 rounded w-full max-w-md"
