@@ -20,8 +20,8 @@ export function BasicTable<T>({
     row.getVisibleCells().some((cell) =>
       String(cell.getValue() ?? "")
         .toLowerCase()
-        .includes((searchQuery ?? "").toLowerCase()),
-    ),
+        .includes((searchQuery ?? "").toLowerCase())
+    )
   );
 
   return (
@@ -70,7 +70,7 @@ export function BasicTable<T>({
                 >
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext(),
+                    header.getContext()
                   )}
                   {ENABLE_SORTING &&
                     ({

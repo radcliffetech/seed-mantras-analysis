@@ -43,7 +43,7 @@ const SeedIndexView = () => {
 
   const [highlightVowel, setHighlightVowel] = useState<string | null>(null);
   const [highlightConsonant, setHighlightConsonant] = useState<string | null>(
-    null,
+    null
   );
   const [highlightFinal, setHighlightFinal] = useState<string | null>(null);
 
@@ -108,7 +108,7 @@ const SeedIndexView = () => {
   const filteredSeeds = useMemo(() => {
     if (!debouncedQuery) return allSeeds;
     return allSeeds.filter((seed) =>
-      seed.iast.toLowerCase().includes(debouncedQuery.toLowerCase()),
+      seed.iast.toLowerCase().includes(debouncedQuery.toLowerCase())
     );
   }, [debouncedQuery, allSeeds]);
 

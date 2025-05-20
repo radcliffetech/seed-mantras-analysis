@@ -2,6 +2,7 @@ import * as d3 from "d3";
 
 import { useEffect, useRef } from "react";
 
+import { match } from "ts-pattern";
 import { useTranslation } from "../i18n";
 
 type Bija = {
@@ -37,14 +38,20 @@ function getTooltipHtml(
   incoming: string[],
   outgoing: string[],
   scriptMode: Props["scriptMode"],
-  t: (key: string) => string,
+  t: (key: string) => string
 ) {
-  const primaryLabel =
-    scriptMode === "iast"
-      ? bija.iast
-      : scriptMode === "iast-devanagari"
-      ? `<span style="font-style: italic;">${bija.iast}</span>`
-      : bija.devanagari;
+  const getPrimaryLabel = (bija: Bija) => {
+    return match(scriptMode)
+      .with("iast", () => bija.iast)
+      .with(
+        "iast-devanagari",
+        () => `<span style="font-style: italic;">${bija.iast}</span>`
+      )
+      .with("devanagari", () => bija.devanagari)
+      .exhaustive();
+  };
+
+  const primaryLabel = getPrimaryLabel(bija);
 
   return `
     <div style='font-style:bold;font-size:1.5rem'>${primaryLabel}</div><br/>
@@ -82,7 +89,7 @@ export const BijaMandala = ({ data, scriptMode }: Props) => {
 
       const bijaIds = new Set(filteredBijas.map((bija) => bija.id));
       const filteredLinks = layer.links.filter(
-        (link) => bijaIds.has(link.sourceId) && bijaIds.has(link.targetId),
+        (link) => bijaIds.has(link.sourceId) && bijaIds.has(link.targetId)
       );
 
       return {
@@ -220,7 +227,7 @@ export const BijaMandala = ({ data, scriptMode }: Props) => {
           .attr("r", CELL_RADIUS)
           .attr(
             "fill",
-            ringColorMap.get(layer.id) || (bija.traditional ? "#c32" : "#555"),
+            ringColorMap.get(layer.id) || (bija.traditional ? "#c32" : "#555")
           )
           .on("mouseover", function () {
             const incoming = allLinks
