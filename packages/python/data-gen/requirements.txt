@@ -1,4 +1,5 @@
 black
+indic-transliteration
 pandas
 pre-commit
 pytest

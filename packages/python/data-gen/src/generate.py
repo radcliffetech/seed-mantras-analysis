@@ -1,3 +1,4 @@
+from indic_transliteration.sanscript import SCHEMES, transliterate
 import csv
 from itertools import product
 
@@ -20,7 +21,7 @@ def main():
     import os
 
     bijas = generate_all_bijas()
-    output_dir = "tmp/output/"
+    output_dir = "sandbox/output/"
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, "all_bija_permutations.csv")
     with open(output_path, "w", newline="", encoding="utf-8") as csvfile:
@@ -44,11 +45,12 @@ def main():
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for bija, is_traditional, prefix, vowel, suffix, meta in bijas:
+            devanagari = transliterate(bija, "iast", "devanagari")
             writer.writerow(
                 {
                     "id": f"seed-{bija.lower()}",
                     "IAST": bija,
-                    "Devanagari": "",
+                    "Devanagari": devanagari,
                     "ValidSanskrit": True,
                     "Traditional": is_traditional,
                     "InitialCluster": prefix,
