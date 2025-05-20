@@ -1,9 +1,17 @@
+import {
+  GlobeAltIcon,
+  HomeIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
+
 export const navConfig = [
-  { path: "/", labelKey: "nav.mandala" },
-  { path: "/index", labelKey: "nav.index" },
+  { path: "/", labelKey: "nav.home", icon: HomeIcon },
+  { path: "/index", labelKey: "nav.index", icon: MagnifyingGlassIcon },
+  { path: "/mandala", labelKey: "nav.mandala", icon: GlobeAltIcon },
 ];
 
 export type NavItem = {
   path: string;
   labelKey: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 };

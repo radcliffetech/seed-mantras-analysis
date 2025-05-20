@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-primary {
+    @apply bg-[theme('colors.brand.dark')] hover:bg-[theme('colors.brand.primary')] text-white py-2 px-6 rounded-lg text-lg transition;
+  }
+}
+
+@layer components {
+  .btn-secondary {
+    @apply bg-[theme('colors.brand.light')] hover:bg-[theme('colors.brand.primary')] text-brand-dark py-2 px-6 rounded-lg text-lg transition;
+  }
+}
+
+@layer components {
+  .pill {
+    @apply text-xs px-3 py-1 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-200 transition;
+  }
+}
+@layer components {
+  .pill-lg {
+    @apply text-lg px-5 py-2 rounded-full transition border;
+  }
+
+  .pill-active {
+    @apply bg-[theme('colors.brand.light')] text-[theme('colors.brand.dark')] shadow-md border-[theme('colors.brand.primary')];
+  }
+
+  .pill-inactive {
+    @apply bg-white text-gray-700 hover:bg-gray-100 border-gray-300;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply text-sm font-light text-white hover:text-gray-300 transition;
+  }
+}
+
+@layer components {
+  .highlight-1 {
+    @apply bg-[theme('colors.brand.light')] text-[theme('colors.brand.dark')] shadow-lg border-[theme('colors.brand.light')];
+  }
+}
+@layer components {
+  .highlight-2 {
+    @apply bg-[theme('colors.brand.dark')] text-white shadow-xl border-[theme('colors.brand.dark')];
+  }
+}
+
+@layer components {
+  .text-highlight {
+    @apply text-[theme('colors.brand.dark')];
+  }
+}
+
+@layer utilities {
+  .prose p + p {
+    margin-top: 1.25em;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    margin-bottom: 0.5em;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-still {
+    animation: fadeInStill 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInStill {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@layer components {
+  .navbar-dark {
+    @apply bg-[theme('colors.surface.dark')] text-[theme('colors.brand.light')] border-b border-divider;
+  }
+}
+@layer components {
+  .dropdown-dark {
+    @apply bg-[theme('colors.surface.dark')] text-[theme('colors.brand.light')] rounded shadow-lg;
+  }
+}
+@layer components {
+  .dropdown-link {
+    @apply px-3 py-2 rounded hover:bg-[theme('colors.brand.primary')] hover:text-white transition;
+  }
+}

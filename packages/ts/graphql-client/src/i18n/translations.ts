@@ -2,11 +2,18 @@ export const translations = {
   en: {
     nav: {
       mandala: "Mandala",
-      index: "Index",
+      home: "Home",
+      index: "Seed Index",
     },
     mandala: {
       outgoing: "outgoing link(s)",
       incoming: "incoming link(s)",
+    },
+    home: {
+      title: "Seed Treasury",
+      description:
+        "Explore the Seed Treasury, a collection of seed mantras and their connections.",
+      searchPlaceholder: "Search for a seed mantra...",
     },
     header: {
       title: "Seed Treasury",
@@ -50,8 +57,15 @@ export const translations = {
   sa: {
     nav: {
       mandala: "मण्डलम्",
+      home: "गृहः",
       index: "सूची",
     },
+    home: {
+      title: "बीजकोशः",
+      description: "बीजकोशस्य अन्वेषणं, बीजमन्त्राणां सङ्गतयः च।",
+      searchPlaceholder: "बीजमन्त्रस्य अन्वेषणम्...",
+    },
+
     mandala: {
       outgoing: "निर्गता-सङ्गतयः",
       incoming: "आगता-सङ्गतयः",

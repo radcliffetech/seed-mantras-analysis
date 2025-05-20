@@ -38,8 +38,8 @@ export default function MandalaView() {
 
   const {
     data: bijaData,
-    loading: bLoading,
-    error: bError,
+    loading: loading,
+    error: error,
   } = useQuery(getQuery());
   const vowelOrder = [
     "all",
@@ -59,14 +59,6 @@ export default function MandalaView() {
     "au",
   ];
 
-  if (bLoading) return <p>{t("system.loading")}</p>;
-  if (bError)
-    return (
-      <p>
-        {t("system.error")} {bError?.message}
-      </p>
-    );
-
   return (
     <div>
       <div
@@ -81,20 +73,24 @@ export default function MandalaView() {
           <button
             key={v}
             onClick={() => setVowel(v)}
-            style={{
-              padding: "4px 10px",
-              borderRadius: "20px",
-              border: vowel === v ? "2px solid #444" : "1px solid #ccc",
-              background: vowel === v ? "#eee" : "#fff",
-              fontWeight: vowel === v ? "bold" : "normal",
-              cursor: "pointer",
-            }}
+            className={`${
+              vowel === v ? "pill pill-lg pill-active" : "pill pill-lg"
+            }`}
           >
             {t(`vowels.${v}`)}
           </button>
         ))}
       </div>
-      <BijaMandala data={bijaData.bijaLayers} scriptMode={mode} />
+      {loading && <p>{t("system.loading")}</p>}
+      {error && (
+        <p>
+          {t("system.error")} {error?.message}
+        </p>
+      )}
+
+      {!loading && !error && bijaData && (
+        <BijaMandala data={bijaData.bijaLayers} scriptMode={mode} />
+      )}
     </div>
   );
 }

@@ -150,9 +150,14 @@ class Query:
 
     @strawberry.field
     def bijas(
-        self, traditional: Optional[bool] = None, place: Optional[str] = None
+        self,
+        traditional: Optional[bool] = None,
+        place: Optional[str] = None,
+        limit: Optional[int] = None,
     ) -> List[Bija]:
         results = load_bijas()
+        if limit:
+            results = results[:limit]
         if traditional is not None:
             results = [b for b in results if b.traditional == traditional]
         if place:

@@ -4,6 +4,7 @@ import { useTranslation } from "../i18n";
 type NavItem = {
   path: string;
   labelKey: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 };
 
 export default function Navbar({ navItems }: { navItems: NavItem[] }) {
@@ -11,13 +12,14 @@ export default function Navbar({ navItems }: { navItems: NavItem[] }) {
 
   return (
     <nav className="space-y-2">
-      {navItems.map((item) => (
+      {navItems.map(({ path, labelKey, icon: Icon }) => (
         <Link
-          key={item.path}
-          to={item.path}
-          className="block text-gray-700 hover:text-blue-600"
+          key={path}
+          to={path}
+          className="flex items-center gap-2 text-brand-dark hover:text-brand-primary"
         >
-          {t(item.labelKey)}
+          <Icon className="w-5 h-5" />
+          {t(labelKey)}
         </Link>
       ))}
     </nav>
