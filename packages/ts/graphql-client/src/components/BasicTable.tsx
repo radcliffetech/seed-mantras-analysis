@@ -33,7 +33,7 @@ export function BasicTable<T>({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search..."
+              placeholder={t("search.placeholder")}
               className="border p-2 pr-8 rounded-md w-64"
             />
             {searchQuery && (
