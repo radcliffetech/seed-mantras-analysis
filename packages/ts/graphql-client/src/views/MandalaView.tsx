@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 
 import { BijaMandala } from "../components/BijaMandala";
+import { FeatureSelector } from "../components/FeatureSelector";
 import { SectionLoading } from "../components/SectionLoading";
 import { useOutputScript } from "../context/OutputScriptContext";
 import { useState } from "react";
@@ -62,26 +63,15 @@ export default function MandalaView() {
 
   return (
     <div>
-      <div
-        style={{
-          marginBottom: "1rem",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "0.5rem",
-        }}
-      >
-        {vowelOrder.map((v) => (
-          <button
-            key={v}
-            onClick={() => setVowel(v)}
-            className={`${
-              vowel === v ? "pill pill-lg pill-active" : "pill pill-lg"
-            }`}
-          >
-            {t(`vowels.${v}`)}
-          </button>
-        ))}
-      </div>
+      <FeatureSelector
+        label={t("explorer.vowel")}
+        items={vowelOrder}
+        active={vowel}
+        onSelect={(v) => setVowel(v || "")}
+        color="#8b5cf6"
+        i18nPrefix="vowels"
+        size="sm"
+      />
       {loading && <SectionLoading heading={t("system.loading")} />}
       {error && (
         <p>
@@ -90,7 +80,12 @@ export default function MandalaView() {
       )}
 
       {!loading && !error && bijaData && (
-        <BijaMandala data={bijaData.bijaLayers} scriptMode={mode} />
+        <BijaMandala
+          data={
+            vowel === "all" ? bijaData.bijaLayers : bijaData.bijaLayers.slice(1)
+          }
+          scriptMode={mode}
+        />
       )}
     </div>
   );

@@ -3,11 +3,22 @@ export const translations = {
     nav: {
       mandala: "Mandala",
       home: "Home",
+      explorer: "GraphQL Explorer",
       index: "Seed Index",
     },
     mandala: {
       outgoing: "outgoing link(s)",
       incoming: "incoming link(s)",
+    },
+    explorer: {
+      title: "GraphQL Explorer",
+      description:
+        "Explore the Seed Treasury using GraphQL. Select fields to fetch and apply filters.",
+      fieldsToFetch: "Fields to fetch",
+      filters: "Filters",
+      vowel: "Vowel",
+      final: "Final",
+      generatedQuery: "Generated Query",
     },
     home: {
       title: "Seed Treasury",
@@ -29,6 +40,9 @@ export const translations = {
       loading: "Loading...",
       error: "Error",
       search: "Search",
+      filters: "Filters",
+      results: "Results",
+      displayLimit: "Display Limit",
     },
     vowels: {
       all: "All",
@@ -85,9 +99,9 @@ export const translations = {
     finals: {
       ṁ: "ṁ",
       ḥ: "ḥ",
-      m: "m\\",
-      ṭ: "ṭ\\",
-      t: "t\\",
+      m: "m",
+      ṭ: "ṭ",
+      t: "t",
     },
     footer: {
       copyright: "Seed Mantras Project",
@@ -96,8 +110,10 @@ export const translations = {
       title: "Seed Index",
       displaying: "Displaying",
       filtered: "filtered seeds",
+      seedsInStore: "seeds in store",
       iast: "IAST",
       devanagari: "Devanagari",
+      consonant: "Consonant",
       initial: "Initial",
       vowel: "Vowel",
       final: "Final",
@@ -107,12 +123,23 @@ export const translations = {
     nav: {
       mandala: "मण्डलम्",
       home: "गृहः",
+      explorer: "GraphQL अन्वेषकः",
       index: "सूची",
     },
     home: {
       title: "बीजकोशः",
       description: "बीजकोशस्य अन्वेषणं, बीजमन्त्राणां सङ्गतयः च।",
       searchPlaceholder: "बीजमन्त्रस्य अन्वेषणम्...",
+    },
+    explorer: {
+      title: "GraphQL अन्वेषकः",
+      description:
+        "GraphQL उपयुज्य बीजकोशस्य अन्वेषणं। क्षेत्राणि चयनं कुरुत, च परिशोधयन्तु।",
+      fieldsToFetch: "क्षेत्राणि",
+      filters: "परिशोधकाः",
+      vowel: "स्वरः",
+      final: "अन्त्याक्षरः",
+      generatedQuery: "निर्मितः अन्वेषणः",
     },
 
     mandala: {
@@ -123,6 +150,9 @@ export const translations = {
       loading: "लोडिंग्...",
       error: "दोषः",
       search: "अन्वेषणम्",
+      filters: "परिशोधकाः",
+      results: "परिणामाः",
+      displayLimit: "प्रदर्श्यसीमा",
     },
     header: {
       title: "बीजकोशः",
@@ -201,8 +231,10 @@ export const translations = {
       displaying: "प्रदर्श्यमानम्",
       filtered: "परिशोधितम्",
       iast: "आङ्ग्ललिपिः",
+      consonant: "व्यञ्जनम्",
       devanagari: "देवनागरी",
       initial: "पूर्वव्यञ्जनम्",
+      seedsInStore: "बीजाः संग्रहे",
       vowel: "स्वरः",
       final: "अन्त्याक्षरः",
     },

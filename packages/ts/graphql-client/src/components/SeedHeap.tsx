@@ -23,10 +23,11 @@ interface Bija {
 }
 
 // const CUTOFF_SMALL = 100;
-const CUTOFF_MIDDLE = 1000;
-const CUTOFF_LARGE = 3000;
+const CUTOFF_MD = 1000;
+const CUTOFF_LG = 3000;
+const CUTOFF_XL = 7000;
 
-type HeapSize = "small" | "middle" | "large";
+type HeapSize = "sm" | "md" | "lg" | "xl";
 
 function getTooltipHtml(d: Bija, scriptMode: string, t: any) {
   return `
@@ -56,13 +57,22 @@ export const SeedHeap = ({
   const { mode: scriptMode } = useOutputScript();
   const svgRef = useRef<SVGSVGElement | null>(null);
   const tooltipRef = useRef<HTMLDivElement | null>(null);
-  const [heapSize, setHeapSize] = useState<HeapSize>("small");
+  const [heapSize, setHeapSize] = useState<HeapSize>("sm");
+  // Window width state for resize support
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  // Listen for window resize and update state
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const getHeapSize = (): HeapSize => {
-      if (data.length >= CUTOFF_LARGE) return "small";
-      if (data.length >= CUTOFF_MIDDLE) return "middle";
-      return "large";
+      if (data.length >= CUTOFF_XL) return "sm"; // small size
+      if (data.length >= CUTOFF_LG) return "md";
+      if (data.length >= CUTOFF_MD) return "lg";
+      return "xl";
     };
     const newHeapSize = getHeapSize();
     if (newHeapSize !== heapSize) {
@@ -72,23 +82,26 @@ export const SeedHeap = ({
 
   const getRadiusForSize = (size: HeapSize): number =>
     match(size)
-      .with("small", () => 4)
-      .with("middle", () => 16)
-      .with("large", () => 20)
+      .with("sm", () => 4)
+      .with("md", () => 16)
+      .with("lg", () => 20)
+      .with("xl", () => 24)
       .otherwise(() => 0);
 
   const getPaddingForSize = (size: HeapSize): number =>
     match(size)
-      .with("small", () => 4)
-      .with("middle", () => 6)
-      .with("large", () => 6)
+      .with("sm", () => 4)
+      .with("md", () => 6)
+      .with("lg", () => 6)
+      .with("xl", () => 8)
       .otherwise(() => 0);
 
   const getFontSizeForSize = (size: HeapSize): string =>
     match(size)
-      .with("small", () => "10px")
-      .with("middle", () => "14px")
-      .with("large", () => "20px")
+      .with("sm", () => "10px")
+      .with("md", () => "14px")
+      .with("lg", () => "20px")
+      .with("xl", () => "24px")
       .otherwise(() => "0px");
 
   useEffect(() => {
@@ -148,36 +161,34 @@ export const SeedHeap = ({
     };
 
     const onCircleHover = function (this: any, event: any, d: Bija) {
-      // For demonstration, incoming and outgoing are empty arrays since data does not contain sourceId/targetId
-      // Adjust as needed if you have link data
+      // Use SVG coordinate transformation for accurate tooltip placement
+      const svg = svgRef.current!;
+      const tooltip = d3.select(tooltipRef.current!);
 
-      // Align tooltip to the position of the hovered SVG element (circle) rather than the mouse position
-      const cx = d3.select(this).attr("cx");
-      const cy = d3.select(this).attr("cy");
-      // add cursor to pointer
-      d3.select(this).style("cursor", "pointer");
+      const cx = parseFloat(d3.select(this).attr("cx"));
+      const cy = parseFloat(d3.select(this).attr("cy"));
+      const point = svg.createSVGPoint();
+      point.x = cx;
+      point.y = cy;
 
-      const matrix = (this as SVGGraphicsElement).getScreenCTM();
-      if (matrix) {
-        const point = svgRef.current!.createSVGPoint();
-        point.x = +cx;
-        point.y = +cy;
-        const transformed = point.matrixTransform(matrix);
-        tooltip
-          .html(getTooltipHtml(d, scriptMode, t))
-          .style("top", `${transformed.y + 10}px`)
-          .style("left", `${transformed.x + 10}px`)
-          .style("visibility", "visible")
-          .transition()
-          .duration(120)
-          .style("opacity", 1);
-      }
-      // Stop propagation to prevent document mouseover from hiding immediately
+      const screenPoint = point.matrixTransform(this.getScreenCTM());
+      const tooltipEl = tooltipRef.current!;
+      const container = tooltipEl.offsetParent as HTMLElement;
+      const containerRect = container.getBoundingClientRect();
+
+      tooltip
+        .html(getTooltipHtml(d, scriptMode, t))
+        .style("top", `${screenPoint.y - containerRect.top + 10}px`)
+        .style("left", `${screenPoint.x - containerRect.left + 10}px`)
+        .style("visibility", "visible")
+        .transition()
+        .duration(120)
+        .style("opacity", 1);
       event.stopPropagation();
     };
 
     match(heapSize)
-      .with("small", () => {
+      .with("sm", () => {
         svg
           .selectAll("circle")
           .data(data)
@@ -204,7 +215,7 @@ export const SeedHeap = ({
             d3.select(this).attr("stroke-width", 1).attr("stroke", "#888");
           });
       })
-      .with("middle", () => {
+      .with("md", () => {
         svg
           .selectAll("circle")
           .data(data)
@@ -251,6 +262,7 @@ export const SeedHeap = ({
           .data(data)
           .enter()
           .append("text")
+          .style("pointer-events", "none")
           .attr("x", (_, i) => {
             const col = i % cols;
             return padding + radius + col * (radius * 2 + padding);
@@ -264,7 +276,7 @@ export const SeedHeap = ({
           .attr("fill", "#000")
           .text((d) => (scriptMode === "iast" ? d.iast : d.devanagari));
       })
-      .with("large", () => {
+      .with("lg", () => {
         svg
           .selectAll("circle")
           .data(data)
@@ -311,6 +323,7 @@ export const SeedHeap = ({
           .data(data)
           .enter()
           .append("text")
+          .style("pointer-events", "none")
           .attr("x", (_, i) => {
             const col = i % cols;
             return padding + radius + col * (radius * 2 + padding);
@@ -321,6 +334,67 @@ export const SeedHeap = ({
           })
           .attr("text-anchor", "middle")
           .attr("font-size", "17px")
+          .attr("fill", "#000")
+          .text((d) => (scriptMode === "iast" ? d.iast : d.devanagari));
+      })
+      .with("xl", () => {
+        svg
+          .selectAll("circle")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("r", radius)
+          .attr("fill", fillColor)
+          .attr("stroke", "#888")
+          .attr("stroke-width", 2)
+          .attr("filter", "url(#drop-shadow)")
+          .style("pointer-events", "all")
+          .style("user-select", "none")
+          .attr("cx", (_, i) => {
+            const col = i % cols;
+            return padding + radius + col * (radius * 2 + padding);
+          })
+          .attr("cy", (_, i) => {
+            const row = Math.floor(i / cols);
+            return padding + radius + row * (radius * 2 + padding);
+          })
+          .on("mouseover", onCircleHover)
+          .on("mouseenter", function () {
+            d3.select(this).attr("stroke-width", 3).attr("stroke", "#333");
+          })
+          .on("mouseleave", function () {
+            d3.select(this).attr("stroke-width", 1).attr("stroke", "#888");
+          });
+
+        // Add drop shadow filter definition
+        svg
+          .append("defs")
+          .append("filter")
+          .attr("id", "drop-shadow")
+          .attr("height", "130%")
+          .append("feDropShadow")
+          .attr("dx", 2)
+          .attr("dy", 2)
+          .attr("stdDeviation", 2)
+          .attr("flood-color", "#888")
+          .attr("flood-opacity", 0.5);
+
+        svg
+          .selectAll("text")
+          .data(data)
+          .enter()
+          .append("text")
+          .style("pointer-events", "none")
+          .attr("x", (_, i) => {
+            const col = i % cols;
+            return padding + radius + col * (radius * 2 + padding);
+          })
+          .attr("y", (_, i) => {
+            const row = Math.floor(i / cols);
+            return padding + radius + row * (radius * 2 + padding) + 5;
+          })
+          .attr("text-anchor", "middle")
+          .attr("font-size", "24px")
           .attr("fill", "#000")
           .text((d) => (scriptMode === "iast" ? d.iast : d.devanagari));
       });
@@ -338,7 +412,24 @@ export const SeedHeap = ({
     return () => {
       document.body.removeEventListener("mouseover", onBodyHover);
     };
-  }, [data, highlightVowel, highlightConsonant, highlightFinal]);
+  }, [data, highlightVowel, highlightConsonant, highlightFinal, windowWidth]);
+
+  // Hide tooltip on global scroll (capture phase)
+  useEffect(() => {
+    const handleScroll = () => {
+      d3.select(tooltipRef.current!)
+        .transition()
+        .duration(200)
+        .style("opacity", 0)
+        .on("end", function () {
+          d3.select(this).style("visibility", "hidden");
+        });
+    };
+    window.addEventListener("scroll", handleScroll, true); // use capture phase
+    return () => {
+      window.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [data, highlightVowel, highlightConsonant, highlightFinal, windowWidth]);
 
   return (
     <div className="w-full">

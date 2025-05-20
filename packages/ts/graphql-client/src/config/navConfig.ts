@@ -1,4 +1,5 @@
 import {
+  AdjustmentsHorizontalIcon,
   GlobeAltIcon,
   HomeIcon,
   MagnifyingGlassIcon,
@@ -8,6 +9,11 @@ export const navConfig = [
   { path: "/", labelKey: "nav.home", icon: HomeIcon },
   { path: "/index", labelKey: "nav.index", icon: MagnifyingGlassIcon },
   { path: "/mandala", labelKey: "nav.mandala", icon: GlobeAltIcon },
+  {
+    path: "/explorer",
+    labelKey: "nav.explorer",
+    icon: AdjustmentsHorizontalIcon,
+  },
 ];
 
 export type NavItem = {

@@ -54,7 +54,7 @@ function getTooltipHtml(
   const primaryLabel = getPrimaryLabel(bija);
 
   return `
-    <div style='font-style:bold;font-size:1.5rem'>${primaryLabel}</div><br/>
+    <div style='font-devanagari font-style:bold;font-size:1.5rem'>${primaryLabel}</div><br/>
     <span class='text-muted'>${bija.iast}</span><br/>
     → ${outgoing.length} ${t("mandala.outgoing")}:
     <br/><span style="font-size: 11px">${outgoing.join("<br/>")}</span><br/>
@@ -66,6 +66,7 @@ function getTooltipHtml(
 export const BijaMandala = ({ data, scriptMode }: Props) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const { t } = useTranslation();
+  const numberLayers = data.length;
 
   useEffect(() => {
     if (!data.length) {
@@ -103,8 +104,8 @@ export const BijaMandala = ({ data, scriptMode }: Props) => {
     const SVG_HEIGHT = 700;
     const CENTER_X = SVG_WIDTH / 2;
     const CENTER_Y = SVG_HEIGHT / 2;
-    const RING_STEP = 50;
-    const CELL_RADIUS = 5;
+    const RING_STEP = numberLayers === 4 ? 60 : 80;
+    const CELL_RADIUS = 8;
 
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
