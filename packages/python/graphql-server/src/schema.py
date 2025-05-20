@@ -154,14 +154,20 @@ class Query:
         traditional: Optional[bool] = None,
         place: Optional[str] = None,
         limit: Optional[int] = None,
+        vowel: Optional[str] = None,
+        final: Optional[str] = None,
     ) -> List[Bija]:
         results = load_bijas()
-        if limit is not None:
-            results = results[:limit]
+        if vowel:
+            results = [b for b in results if b.vowel == vowel]
+        if final:
+            results = [b for b in results if b.final == final]
         if traditional is not None:
             results = [b for b in results if b.traditional == traditional]
         if place:
             results = [b for b in results if b.place == place]
+        if limit is not None:
+            results = results[:limit]
         return results
 
     @strawberry.field

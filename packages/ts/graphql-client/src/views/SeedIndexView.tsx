@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import { useEffect, useMemo, useState } from "react";
 
+import { FeatureSelector } from "../components/FeatureSelector";
 import { SectionLoading } from "../components/SectionLoading";
 import { SeedHeap } from "../components/SeedHeap";
 import { useDebounce } from "use-debounce";
@@ -57,6 +58,7 @@ const SeedIndexView = () => {
     "ṛ",
     "ṝ",
     "ḷ",
+    "ḹ",
     "e",
     "ai",
     "o",
@@ -117,7 +119,7 @@ const SeedIndexView = () => {
       <h2 className="text-2xl font-bold mb-4">{t("seedIndex.title")}</h2>
       <div className="mb-4">
         <label htmlFor="limitRange" className="block font-medium mb-1">
-          Display Limit: {limit}
+          {t("system.displayLimit")}: {limit}
         </label>
         <input
           id="limitRange"
@@ -140,7 +142,9 @@ const SeedIndexView = () => {
       {!loading && !error && (
         <div className="space-y-4">
           <div>
-            <span>{allSeeds.length.toLocaleString()} seeds in storehouse</span>
+            <span>
+              {allSeeds.length.toLocaleString()} {t("seedIndex.seedsInStore")}
+            </span>
             <br />
             <span>
               {t("seedIndex.displaying")}{" "}
@@ -149,67 +153,32 @@ const SeedIndexView = () => {
           </div>
 
           <div className="mb-6">
-            <h3 className="text-sm font-medium uppercase text-gray-500">
-              {t("consonant")}
-            </h3>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {consonantList.map((c) => (
-                <button
-                  key={c}
-                  onClick={() =>
-                    setHighlightConsonant(c === highlightConsonant ? null : c)
-                  }
-                  className={`pill pill-lg ${
-                    highlightConsonant === c
-                      ? `bg-[${CONSONANT_HIGHLIGHT_COLOR}] text-white`
-                      : ""
-                  }`}
-                >
-                  {t(`consonants.${c}`)}
-                </button>
-              ))}
-            </div>
-            <h3 className="text-sm font-medium uppercase text-gray-500">
-              Vowel
-            </h3>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {vowelOrder.map((v) => (
-                <button
-                  key={v}
-                  onClick={() =>
-                    setHighlightVowel(v === highlightVowel ? null : v)
-                  }
-                  className={`pill pill-lg ${
-                    highlightVowel === v
-                      ? `bg-[${VOWEL_HIGHLIGHT_COLOR}] text-white`
-                      : ""
-                  }`}
-                >
-                  {t(`vowels.${v}`)}
-                </button>
-              ))}
-            </div>
+            <FeatureSelector
+              label={t("seedIndex.consonant")}
+              items={consonantList}
+              active={highlightConsonant}
+              onSelect={setHighlightConsonant}
+              color={CONSONANT_HIGHLIGHT_COLOR}
+              i18nPrefix="consonants"
+            />
 
-            <h3 className="text-sm font-medium uppercase text-gray-500">
-              {t("final")}
-            </h3>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {finalList.map((f) => (
-                <button
-                  key={f}
-                  onClick={() =>
-                    setHighlightFinal(f === highlightFinal ? null : f)
-                  }
-                  className={`pill pill-lg ${
-                    highlightFinal === f
-                      ? `bg-[${FINAL_HIGHLIGHT_COLOR}] text-white`
-                      : ""
-                  }`}
-                >
-                  {t(`finals.${f}`) || <span>&nbsp;</span>}
-                </button>
-              ))}
-            </div>
+            <FeatureSelector
+              label={t("seedIndex.vowel")}
+              items={vowelOrder}
+              active={highlightVowel}
+              onSelect={setHighlightVowel}
+              color={VOWEL_HIGHLIGHT_COLOR}
+              i18nPrefix="vowels"
+            />
+
+            <FeatureSelector
+              label={t("seedIndex.final")}
+              items={finalList}
+              active={highlightFinal}
+              onSelect={setHighlightFinal}
+              color={FINAL_HIGHLIGHT_COLOR}
+              i18nPrefix="finals"
+            />
           </div>
 
           <div className="">

@@ -1,3 +1,4 @@
+import ExplorerView from "../views/ExplorerView";
 import HomeView from "../views/HomeView";
 import MandalaView from "../views/MandalaView";
 import SeedIndexView from "../views/SeedIndexView";
@@ -20,6 +21,13 @@ export const routeConfig = [
     path: "/index",
     element: <SeedIndexView />,
     labelKey: "nav.index",
+    requiresAuth: false,
+    layout: "default",
+  },
+  {
+    path: "/explorer",
+    element: <ExplorerView />,
+    labelKey: "nav.explorer",
     requiresAuth: false,
     layout: "default",
   },
