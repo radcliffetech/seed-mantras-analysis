@@ -1,5 +1,6 @@
 black
 fastapi
+indic_transliteration
 pre-commit
 strawberry-graphql[fastapi]
 uvicorn

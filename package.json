@@ -15,5 +15,9 @@
   ],
   "devDependencies": {
     "concurrently": "^9.1.2"
+  },
+  "dependencies": {
+    "ts-pattern": "^5.7.1",
+    "use-debounce": "^10.0.4"
   }
 }

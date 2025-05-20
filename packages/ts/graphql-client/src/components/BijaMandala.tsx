@@ -2,10 +2,14 @@ import * as d3 from "d3";
 
 import { useEffect, useRef } from "react";
 
+import { match } from "ts-pattern";
+import { useTranslation } from "../i18n";
+
 type Bija = {
   id: string;
   iast: string;
   traditional: boolean;
+  devanagari: string;
   initialcluster: string;
   vowel: string;
   final: string;
@@ -26,10 +30,42 @@ type BijaLayer = {
 
 type Props = {
   data: BijaLayer[];
+  scriptMode: "iast" | "devanagari" | "iast-devanagari";
 };
 
-export const BijaMandala = ({ data }: Props) => {
+function getTooltipHtml(
+  bija: Bija,
+  incoming: string[],
+  outgoing: string[],
+  scriptMode: Props["scriptMode"],
+  t: (key: string) => string
+) {
+  const getPrimaryLabel = (bija: Bija) => {
+    return match(scriptMode)
+      .with("iast", () => bija.iast)
+      .with(
+        "iast-devanagari",
+        () => `<span style="font-style: italic;">${bija.iast}</span>`
+      )
+      .with("devanagari", () => bija.devanagari)
+      .exhaustive();
+  };
+
+  const primaryLabel = getPrimaryLabel(bija);
+
+  return `
+    <div style='font-style:bold;font-size:1.5rem'>${primaryLabel}</div><br/>
+    <span class='text-muted'>${bija.iast}</span><br/>
+    → ${outgoing.length} ${t("mandala.outgoing")}:
+    <br/><span style="font-size: 11px">${outgoing.join("<br/>")}</span><br/>
+    ← ${incoming.length} ${t("mandala.incoming")}:
+    <br/><span style="font-size: 11px">${incoming.join("<br/>")}</span>
+  `;
+}
+
+export const BijaMandala = ({ data, scriptMode }: Props) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!data.length) {
@@ -48,12 +84,12 @@ export const BijaMandala = ({ data }: Props) => {
       ["layer0", "#9b59b6"], // purple (optional)
     ]);
 
-    const filteredData = data.map((layer) => {
+    const preppedData = data.map((layer) => {
       const filteredBijas = layer.bijas;
 
       const bijaIds = new Set(filteredBijas.map((bija) => bija.id));
       const filteredLinks = layer.links.filter(
-        (link) => bijaIds.has(link.sourceId) && bijaIds.has(link.targetId),
+        (link) => bijaIds.has(link.sourceId) && bijaIds.has(link.targetId)
       );
 
       return {
@@ -115,7 +151,7 @@ export const BijaMandala = ({ data }: Props) => {
 
     const defs = svg.append("defs");
 
-    filteredData.forEach((layer, layerIndex) => {
+    preppedData.forEach((layer, layerIndex) => {
       const radius = RING_STEP * (layerIndex + 1);
       const angleStep = (2 * Math.PI) / layer.bijas.length;
 
@@ -176,7 +212,7 @@ export const BijaMandala = ({ data }: Props) => {
     });
 
     // Now draw nodes per ring group
-    filteredData.forEach((layer) => {
+    preppedData.forEach((layer) => {
       // const radius = RING_STEP * (layerIndex + 1);
       const ringGroup = ringGroupMap.get(layer.id);
       if (!ringGroup) return;
@@ -191,36 +227,24 @@ export const BijaMandala = ({ data }: Props) => {
           .attr("r", CELL_RADIUS)
           .attr(
             "fill",
-            ringColorMap.get(layer.id) || (bija.traditional ? "#c32" : "#555"),
+            ringColorMap.get(layer.id) || (bija.traditional ? "#c32" : "#555")
           )
           .on("mouseover", function () {
             const incoming = allLinks
               .filter((l) => l.targetId === bija.id)
               .map((l) => {
                 const src = allBijas.find((b) => b.id === l.sourceId);
-                return src ? src.iast : l.sourceId;
+                return src ? `${src.devanagari} (${src.iast})` : l.sourceId;
               });
             const outgoing = allLinks
               .filter((l) => l.sourceId === bija.id)
               .map((l) => {
                 const tgt = allBijas.find((b) => b.id === l.targetId);
-                return tgt ? tgt.iast : l.targetId;
+                return tgt ? `${tgt.devanagari} (${tgt.iast})` : l.targetId;
               });
 
             tooltip
-              .html(
-                `<strong>${bija.iast}</strong><br/>` +
-                  `→ ${
-                    outgoing.length
-                  } link(s):<br/><span style="font-size: 11px">${outgoing.join(
-                    "<br/>",
-                  )}</span><br/>` +
-                  `← ${
-                    incoming.length
-                  } link(s):<br/><span style="font-size: 11px">${incoming.join(
-                    "<br/>",
-                  )}</span>`,
-              )
+              .html(getTooltipHtml(bija, incoming, outgoing, scriptMode, t))
               .style("visibility", "visible")
               .transition()
               .duration(120)
@@ -239,16 +263,56 @@ export const BijaMandala = ({ data }: Props) => {
               .duration(120)
               .style("opacity", 0)
               .on("end", () => tooltip.style("visibility", "hidden"));
+          })
+          .on("click", function (event) {
+            const { clientX, clientY } = event;
+            const { left, top } = svgRef.current!.getBoundingClientRect();
+
+            const incoming = allLinks
+              .filter((l) => l.targetId === bija.id)
+              .map((l) => {
+                const src = allBijas.find((b) => b.id === l.sourceId);
+                return src ? `${src.devanagari} (${src.iast})` : l.sourceId;
+              });
+            const outgoing = allLinks
+              .filter((l) => l.sourceId === bija.id)
+              .map((l) => {
+                const tgt = allBijas.find((b) => b.id === l.targetId);
+                return tgt ? `${tgt.devanagari} (${tgt.iast})` : l.targetId;
+              });
+
+            tooltip
+              .html(getTooltipHtml(bija, incoming, outgoing, scriptMode, t))
+              .style("top", `${clientY - top + 10}px`)
+              .style("left", `${clientX - left + 10}px`)
+              .style("visibility", "visible")
+              .transition()
+              .duration(120)
+              .style("opacity", 1);
           });
       });
     });
 
     // Remove ring rotation: ring groups are not rotated, keep transform as translate(0,0) or omit.
 
+    // Optional: hide tooltip on clicking outside nodes
+    function handleBodyClick(event: MouseEvent) {
+      const target = event.target as HTMLElement;
+      if (!target.closest(".bija-tooltip") && !target.closest("circle")) {
+        tooltip
+          .transition()
+          .duration(120)
+          .style("opacity", 0)
+          .on("end", () => tooltip.style("visibility", "hidden"));
+      }
+    }
+    document.body.addEventListener("click", handleBodyClick);
+
     return () => {
       tooltip.remove();
+      document.body.removeEventListener("click", handleBodyClick);
     };
-  }, [data]);
+  }, [data, scriptMode, t]);
 
   return (
     <div
