@@ -156,7 +156,7 @@ class Query:
         limit: Optional[int] = None,
     ) -> List[Bija]:
         results = load_bijas()
-        if limit:
+        if limit is not None:
             results = results[:limit]
         if traditional is not None:
             results = [b for b in results if b.traditional == traditional]
