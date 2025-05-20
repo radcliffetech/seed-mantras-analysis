@@ -1,8 +1,8 @@
 import type { Table } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
+import { useTranslation } from "../i18n";
 
 const ENABLE_SORTING = false;
-
 export function BasicTable<T>({
   table,
   enableSearch = false,
@@ -16,6 +16,7 @@ export function BasicTable<T>({
   setSearchQuery?: (value: string) => void;
   Actions?: React.ReactNode;
 }) {
+  const { t } = useTranslation();
   const filteredRows = table.getRowModel().rows.filter((row) =>
     row.getVisibleCells().some((cell) =>
       String(cell.getValue() ?? "")
