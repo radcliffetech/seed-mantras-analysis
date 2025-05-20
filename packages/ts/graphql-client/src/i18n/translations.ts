@@ -1,0 +1,98 @@
+export const translations = {
+  en: {
+    nav: {
+      mandala: "Mandala",
+      index: "Index",
+    },
+    mandala: {
+      outgoing: "outgoing link(s)",
+      incoming: "incoming link(s)",
+    },
+    header: {
+      title: "Seed Treasury",
+      languageLabel: "Language",
+      outputLabel: "Script",
+      english: "English",
+      sanskrit: "Sanskrit",
+      iast: "IAST",
+      devanagari: "Devanagari",
+      iastDevanagari: "IAST Styled",
+    },
+    system: {
+      loading: "Loading...",
+      error: "Error",
+    },
+    vowels: {
+      all: "All",
+      a: "a",
+      ā: "ā",
+      i: "i",
+      ī: "ī",
+      u: "u",
+      ū: "ū",
+      ṛ: "ṛ",
+      ṝ: "ṝ",
+      ḷ: "ḷ",
+      ḹ: "ḹ",
+      e: "e",
+      ai: "ai",
+      o: "o",
+      au: "au",
+    },
+    footer: {
+      copyright: "Seed Mantras Project",
+    },
+    searchIndex: {
+      title: "Search Index",
+      displaying: "Displaying",
+    },
+  },
+  sa: {
+    nav: {
+      mandala: "मण्डलम्",
+      index: "सूची",
+    },
+    mandala: {
+      outgoing: "निर्गता-सङ्गतयः",
+      incoming: "आगता-सङ्गतयः",
+    },
+    system: {
+      loading: "लोडिंग्...",
+      error: "दोषः",
+    },
+    header: {
+      title: "बीजकोशः",
+      languageLabel: "भाषा",
+      outputLabel: "लिपिः",
+      english: "आङ्ग्लभाषा",
+      sanskrit: "संस्कृतम्",
+      iast: "आईएएस्टी",
+      devanagari: "देवनागरी",
+      iastDevanagari: "IAST शैली",
+    },
+    vowels: {
+      all: "सर्वे",
+      a: "अ",
+      ā: "आ",
+      i: "इ",
+      ī: "ई",
+      u: "उ",
+      ū: "ऊ",
+      ṛ: "ऋ",
+      ṝ: "ॠ",
+      ḷ: "ऌ",
+      ḹ: "ॡ",
+      e: "ए",
+      ai: "ऐ",
+      o: "ओ",
+      au: "औ",
+    },
+    footer: {
+      copyright: "बीजमन्त्रपरियोजना",
+    },
+    searchIndex: {
+      title: "सूची अन्वेषणम्",
+      displaying: "प्रदर्श्यमानम्",
+    },
+  },
+} as const;

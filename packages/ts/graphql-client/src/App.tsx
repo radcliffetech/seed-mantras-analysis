@@ -1,11 +1,21 @@
-import { LayerExplorer } from "./components/LayerExplorer";
-// import { useState } from "react";
+import {
+  OutputScriptProvider,
+  UILanguageProvider,
+} from "./context/OutputScriptContext";
+
+import { BrowserRouter } from "react-router-dom";
+import Layout from "./layout/Layout";
+import { navConfig } from "./config/navConfig";
 
 function App() {
   return (
-    <div>
-      <LayerExplorer />
-    </div>
+    <BrowserRouter>
+      <UILanguageProvider>
+        <OutputScriptProvider>
+          <Layout navItems={navConfig} />
+        </OutputScriptProvider>
+      </UILanguageProvider>
+    </BrowserRouter>
   );
 }
 

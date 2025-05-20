@@ -1,10 +1,15 @@
 import { gql, useQuery } from "@apollo/client";
 
-import { BijaMandala } from "./BijaMandala";
+import { BijaMandala } from "../components/BijaMandala";
+import { useOutputScript } from "../context/OutputScriptContext";
 import { useState } from "react";
+import { useTranslation } from "../i18n";
 
-export function LayerExplorer() {
+export default function MandalaView() {
   const [vowel, setVowel] = useState<string>("ai");
+  const { mode } = useOutputScript();
+  // const { lang } = useUILanguage();
+  const { t } = useTranslation();
   const getQuery = () => gql`
   query {
     bijaLayers(vowel: "${vowel}") {
@@ -54,12 +59,16 @@ export function LayerExplorer() {
     "au",
   ];
 
-  if (bLoading) return <p>Loading...</p>;
-  if (bError) return <p>Error: {bError?.message}</p>;
+  if (bLoading) return <p>{t("system.loading")}</p>;
+  if (bError)
+    return (
+      <p>
+        {t("system.error")} {bError?.message}
+      </p>
+    );
 
   return (
     <div>
-      <h2>Bīja Mandala</h2>
       <div
         style={{
           marginBottom: "1rem",
@@ -81,11 +90,11 @@ export function LayerExplorer() {
               cursor: "pointer",
             }}
           >
-            {v}
+            {t(`vowels.${v}`)}
           </button>
         ))}
       </div>
-      <BijaMandala data={bijaData.bijaLayers} />
+      <BijaMandala data={bijaData.bijaLayers} scriptMode={mode} />
     </div>
   );
 }

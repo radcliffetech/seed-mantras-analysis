@@ -2,6 +2,8 @@ import * as d3 from "d3";
 
 import { useEffect, useRef } from "react";
 
+import { useTranslation } from "../i18n";
+
 type Bija = {
   id: string;
   iast: string;
@@ -27,10 +29,36 @@ type BijaLayer = {
 
 type Props = {
   data: BijaLayer[];
+  scriptMode: "iast" | "devanagari" | "iast-devanagari";
 };
 
-export const BijaMandala = ({ data }: Props) => {
+function getTooltipHtml(
+  bija: Bija,
+  incoming: string[],
+  outgoing: string[],
+  scriptMode: Props["scriptMode"],
+  t: (key: string) => string,
+) {
+  const primaryLabel =
+    scriptMode === "iast"
+      ? bija.iast
+      : scriptMode === "iast-devanagari"
+      ? `<span style="font-style: italic;">${bija.iast}</span>`
+      : bija.devanagari;
+
+  return `
+    <div style='font-style:bold;font-size:1.5rem'>${primaryLabel}</div><br/>
+    <span class='text-muted'>${bija.iast}</span><br/>
+    → ${outgoing.length} ${t("mandala.outgoing")}:
+    <br/><span style="font-size: 11px">${outgoing.join("<br/>")}</span><br/>
+    ← ${incoming.length} ${t("mandala.incoming")}:
+    <br/><span style="font-size: 11px">${incoming.join("<br/>")}</span>
+  `;
+}
+
+export const BijaMandala = ({ data, scriptMode }: Props) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!data.length) {
@@ -209,20 +237,7 @@ export const BijaMandala = ({ data }: Props) => {
               });
 
             tooltip
-              .html(
-                `<strong>${bija.devanagari}</strong><br/>` +
-                  `<span class='text-muted'>${bija.iast}</span><br/>` +
-                  `→ ${
-                    outgoing.length
-                  } link(s):<br/><span style="font-size: 11px">${outgoing.join(
-                    "<br/>",
-                  )}</span><br/>` +
-                  `← ${
-                    incoming.length
-                  } link(s):<br/><span style="font-size: 11px">${incoming.join(
-                    "<br/>",
-                  )}</span>`,
-              )
+              .html(getTooltipHtml(bija, incoming, outgoing, scriptMode, t))
               .style("visibility", "visible")
               .transition()
               .duration(120)
@@ -250,7 +265,7 @@ export const BijaMandala = ({ data }: Props) => {
     return () => {
       tooltip.remove();
     };
-  }, [data]);
+  }, [data, scriptMode, t]);
 
   return (
     <div
