@@ -256,14 +256,54 @@ export const BijaMandala = ({ data, scriptMode }: Props) => {
               .duration(120)
               .style("opacity", 0)
               .on("end", () => tooltip.style("visibility", "hidden"));
+          })
+          .on("click", function (event) {
+            const { clientX, clientY } = event;
+            const { left, top } = svgRef.current!.getBoundingClientRect();
+
+            const incoming = allLinks
+              .filter((l) => l.targetId === bija.id)
+              .map((l) => {
+                const src = allBijas.find((b) => b.id === l.sourceId);
+                return src ? `${src.devanagari} (${src.iast})` : l.sourceId;
+              });
+            const outgoing = allLinks
+              .filter((l) => l.sourceId === bija.id)
+              .map((l) => {
+                const tgt = allBijas.find((b) => b.id === l.targetId);
+                return tgt ? `${tgt.devanagari} (${tgt.iast})` : l.targetId;
+              });
+
+            tooltip
+              .html(getTooltipHtml(bija, incoming, outgoing, scriptMode, t))
+              .style("top", `${clientY - top + 10}px`)
+              .style("left", `${clientX - left + 10}px`)
+              .style("visibility", "visible")
+              .transition()
+              .duration(120)
+              .style("opacity", 1);
           });
       });
     });
 
     // Remove ring rotation: ring groups are not rotated, keep transform as translate(0,0) or omit.
 
+    // Optional: hide tooltip on clicking outside nodes
+    function handleBodyClick(event: MouseEvent) {
+      const target = event.target as HTMLElement;
+      if (!target.closest(".bija-tooltip") && !target.closest("circle")) {
+        tooltip
+          .transition()
+          .duration(120)
+          .style("opacity", 0)
+          .on("end", () => tooltip.style("visibility", "hidden"));
+      }
+    }
+    document.body.addEventListener("click", handleBodyClick);
+
     return () => {
       tooltip.remove();
+      document.body.removeEventListener("click", handleBodyClick);
     };
   }, [data, scriptMode, t]);
 

@@ -1,6 +1,6 @@
 import HomeView from "../views/HomeView";
 import MandalaView from "../views/MandalaView";
-import SearchIndexView from "../views/SearchIndexView";
+import SeedIndexView from "../views/SeedIndexView";
 export const routeConfig = [
   {
     path: "/",
@@ -18,7 +18,7 @@ export const routeConfig = [
   },
   {
     path: "/index",
-    element: <SearchIndexView />,
+    element: <SeedIndexView />,
     labelKey: "nav.index",
     requiresAuth: false,
     layout: "default",

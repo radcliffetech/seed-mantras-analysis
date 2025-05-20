@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 
 import { BijaMandala } from "../components/BijaMandala";
+import { SectionLoading } from "../components/SectionLoading";
 import { useOutputScript } from "../context/OutputScriptContext";
 import { useState } from "react";
 import { useTranslation } from "../i18n";
@@ -81,7 +82,7 @@ export default function MandalaView() {
           </button>
         ))}
       </div>
-      {loading && <p>{t("system.loading")}</p>}
+      {loading && <SectionLoading heading={t("system.loading")} />}
       {error && (
         <p>
           {t("system.error")} {error?.message}
