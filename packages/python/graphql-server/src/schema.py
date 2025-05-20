@@ -1,3 +1,10 @@
+from indic_transliteration.sanscript import transliterate
+
+
+def iast_to_devanagari(iast: str) -> str:
+    return transliterate(iast, "iast", "devanagari")
+
+
 import csv
 import strawberry
 from typing import Optional, List
@@ -221,7 +228,7 @@ class Query:
             Bija(
                 id=v,
                 iast=v,
-                devanagari=None,
+                devanagari=iast_to_devanagari(v),
                 validsanskrit=True,
                 traditional=False,
                 initialcluster=None,
@@ -245,7 +252,7 @@ class Query:
             Bija(
                 id=f"{v}{f}",
                 iast=f"{v}{f}",
-                devanagari=None,
+                devanagari=iast_to_devanagari(f"{v}{f}"),
                 validsanskrit=True,
                 traditional=False,
                 initialcluster=None,
@@ -275,23 +282,25 @@ class Query:
 
         # Layer 3: simple prefix
         l3 = [
-            Bija(
-                id=f"{c}{v}{f}",
-                iast=f"{c}{v}{f}",
-                devanagari=None,
-                validsanskrit=True,
-                traditional=False,
-                initialcluster=c,
-                vowel=v,
-                final=f,
-                place=None,
-                manner=None,
-                voicing=None,
-                aspiration=None,
-                nasal=None,
-                sibilant=None,
-                retroflex=None,
-            )
+            (
+                lambda iast, c=c, v=v, f=f: Bija(
+                    id=iast,
+                    iast=iast,
+                    devanagari=iast_to_devanagari(iast),
+                    validsanskrit=True,
+                    traditional=False,
+                    initialcluster=c,
+                    vowel=v,
+                    final=f,
+                    place=None,
+                    manner=None,
+                    voicing=None,
+                    aspiration=None,
+                    nasal=None,
+                    sibilant=None,
+                    retroflex=None,
+                )
+            )(f"{c}{v}{f}")
             for c in consonants
             for v in vowel_order
             if include(v)
@@ -311,23 +320,25 @@ class Query:
 
         # Layer 4: complex prefix
         l4 = [
-            Bija(
-                id=f"{c}{v}{f}",
-                iast=f"{c}{v}{f}",
-                devanagari=None,
-                validsanskrit=True,
-                traditional=False,
-                initialcluster=c,
-                vowel=v,
-                final=f,
-                place=None,
-                manner=None,
-                voicing=None,
-                aspiration=None,
-                nasal=None,
-                sibilant=None,
-                retroflex=None,
-            )
+            (
+                lambda iast, c=c, v=v, f=f: Bija(
+                    id=iast,
+                    iast=iast,
+                    devanagari=iast_to_devanagari(iast),
+                    validsanskrit=True,
+                    traditional=False,
+                    initialcluster=c,
+                    vowel=v,
+                    final=f,
+                    place=None,
+                    manner=None,
+                    voicing=None,
+                    aspiration=None,
+                    nasal=None,
+                    sibilant=None,
+                    retroflex=None,
+                )
+            )(f"{c}{v}{f}")
             for c in clusters
             for v in vowel_order
             if include(v)

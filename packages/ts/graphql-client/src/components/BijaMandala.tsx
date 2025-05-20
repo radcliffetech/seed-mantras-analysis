@@ -6,6 +6,7 @@ type Bija = {
   id: string;
   iast: string;
   traditional: boolean;
+  devanagari: string;
   initialcluster: string;
   vowel: string;
   final: string;
@@ -48,7 +49,7 @@ export const BijaMandala = ({ data }: Props) => {
       ["layer0", "#9b59b6"], // purple (optional)
     ]);
 
-    const filteredData = data.map((layer) => {
+    const preppedData = data.map((layer) => {
       const filteredBijas = layer.bijas;
 
       const bijaIds = new Set(filteredBijas.map((bija) => bija.id));
@@ -115,7 +116,7 @@ export const BijaMandala = ({ data }: Props) => {
 
     const defs = svg.append("defs");
 
-    filteredData.forEach((layer, layerIndex) => {
+    preppedData.forEach((layer, layerIndex) => {
       const radius = RING_STEP * (layerIndex + 1);
       const angleStep = (2 * Math.PI) / layer.bijas.length;
 
@@ -176,7 +177,7 @@ export const BijaMandala = ({ data }: Props) => {
     });
 
     // Now draw nodes per ring group
-    filteredData.forEach((layer) => {
+    preppedData.forEach((layer) => {
       // const radius = RING_STEP * (layerIndex + 1);
       const ringGroup = ringGroupMap.get(layer.id);
       if (!ringGroup) return;
@@ -198,18 +199,19 @@ export const BijaMandala = ({ data }: Props) => {
               .filter((l) => l.targetId === bija.id)
               .map((l) => {
                 const src = allBijas.find((b) => b.id === l.sourceId);
-                return src ? src.iast : l.sourceId;
+                return src ? `${src.devanagari} (${src.iast})` : l.sourceId;
               });
             const outgoing = allLinks
               .filter((l) => l.sourceId === bija.id)
               .map((l) => {
                 const tgt = allBijas.find((b) => b.id === l.targetId);
-                return tgt ? tgt.iast : l.targetId;
+                return tgt ? `${tgt.devanagari} (${tgt.iast})` : l.targetId;
               });
 
             tooltip
               .html(
-                `<strong>${bija.iast}</strong><br/>` +
+                `<strong>${bija.devanagari}</strong><br/>` +
+                  `<span class='text-muted'>${bija.iast}</span><br/>` +
                   `→ ${
                     outgoing.length
                   } link(s):<br/><span style="font-size: 11px">${outgoing.join(

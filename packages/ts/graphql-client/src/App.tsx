@@ -1,90 +1,10 @@
-import { gql, useQuery } from "@apollo/client";
-
-import { BijaMandala } from "./components/BijaMandala";
-import { useState } from "react";
+import { LayerExplorer } from "./components/LayerExplorer";
+// import { useState } from "react";
 
 function App() {
-  const [vowel, setVowel] = useState<string>("ai");
-  const getQuery = () => gql`
-  query {
-    bijaLayers(vowel: "${vowel}") {
-      id
-      name
-      bijas {
-        id
-        iast
-        traditional
-        initialcluster
-        place
-        manner
-        voicing
-        retroflex
-        vowel
-        final
-      }
-      links {
-        sourceId
-        targetId
-      }
-    }
-  }
-`;
-
-  const {
-    data: bijaData,
-    loading: bLoading,
-    error: bError,
-  } = useQuery(getQuery());
-  const vowelOrder = [
-    "all",
-    "a",
-    "ā",
-    "i",
-    "ī",
-    "u",
-    "ū",
-    "ṛ",
-    "ṝ",
-    "ḷ",
-    "ḹ",
-    "e",
-    "ai",
-    "o",
-    "au",
-  ];
-
-  if (bLoading) return <p>Loading...</p>;
-  if (bError) return <p>Error: {bError?.message}</p>;
-
   return (
     <div>
-      <h2>Bīja Mandala</h2>
-      <div
-        style={{
-          marginBottom: "1rem",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "0.5rem",
-        }}
-      >
-        {vowelOrder.map((v) => (
-          <button
-            key={v}
-            onClick={() => setVowel(v)}
-            style={{
-              padding: "4px 10px",
-              borderRadius: "20px",
-              border: vowel === v ? "2px solid #444" : "1px solid #ccc",
-              background: vowel === v ? "#eee" : "#fff",
-              fontWeight: vowel === v ? "bold" : "normal",
-              cursor: "pointer",
-            }}
-          >
-            {v}
-          </button>
-        ))}
-      </div>
-      <BijaMandala data={bijaData.bijaLayers} />
+      <LayerExplorer />
     </div>
   );
 }
